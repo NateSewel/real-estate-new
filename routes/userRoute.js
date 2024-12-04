@@ -21,6 +21,6 @@ router.post("/allBookings", allBookings);
 router.post("/removeBooking/:id", cancelBooking);
 //Cancel favourite list
 router.post("/toFavList/:rid", toFavList);
-router.post("/allFav", jwtCheck, getAllFavourites);
+router.post("/allFav", getAllFavourites);
 
 export { router as userRoute };
