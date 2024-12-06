@@ -6,7 +6,7 @@ export const createUser = asyncHandler(async (req, res) => {
   let { email } = req.body;
 
   //   Check if User exists
-  const userExists = await prisma.user.findUnique({ where: { email } });
+  const userExists = await prisma.user.findUnique({ where: { email: email } });
 
   if (!userExists) {
     const user = await prisma.user.create({ data: req.body });
@@ -25,7 +25,7 @@ export const bookVisit = asyncHandler(async (req, res) => {
 
   try {
     const alreadyBooked = await prisma.user.findUnique({
-      where: { email },
+      where: { email: email },
       select: { bookedVisits: true },
     });
     if (alreadyBooked.bookedVisits.some((visit) => visit.id === id)) {
@@ -34,7 +34,7 @@ export const bookVisit = asyncHandler(async (req, res) => {
         .json({ message: "This residency is already booked by you!" });
     } else {
       await prisma.user.update({
-        where: { email },
+        where: { email: email },
         data: {
           bookedVisits: { push: { id, date } },
         },
@@ -47,7 +47,7 @@ export const bookVisit = asyncHandler(async (req, res) => {
 });
 
 // Function to get all Booking of user
-export const allBookings = asyncHandler(async (req, res) => {
+export const getAllBookings = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
   try {
@@ -68,7 +68,7 @@ export const cancelBooking = asyncHandler(async (req, res) => {
 
   try {
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { email: email },
       select: { bookedVisits: true },
     });
 
@@ -93,7 +93,7 @@ export const cancelBooking = asyncHandler(async (req, res) => {
 });
 
 // Function to add residency in favourite list
-export const toFavList = asyncHandler(async (req, res) => {
+export const toFav = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const { rid } = req.params;
 
