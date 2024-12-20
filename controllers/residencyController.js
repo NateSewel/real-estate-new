@@ -28,7 +28,7 @@ export const createResidency = asyncHandler(async (req, res) => {
         owner: { connect: { email: userEmail } },
       },
     });
-    res.send({ message: "Residency created successfully!", residency });
+    res.send({ message: "Residency created successfully!", ...residency });
   } catch (error) {
     if (error.code === "P2002") {
       throw new Error("A residency with that address already registered");
