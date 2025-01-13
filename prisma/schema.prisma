@@ -24,7 +24,7 @@ model Residency {
     title String
     description String
     price Int
-    address String @unique
+    // address String @unique
     city String
     country String
     image String
@@ -34,6 +34,6 @@ model Residency {
     createdAt DateTime? @default(now())
     updatedAt DateTime? @updatedAt
 
-    @@unique(fields: [address, userEmail])
+    @@unique(fields: [ userEmail])
 }
 
