@@ -2,7 +2,6 @@ import asyncHandler from "express-async-handler";
 import { prisma } from "../config/prismaConfig.js";
 
 export const createResidency = asyncHandler(async (req, res) => {
-  
   const {
     title,
     description,
@@ -15,9 +14,21 @@ export const createResidency = asyncHandler(async (req, res) => {
     userEmail,
   } = req.body.data;
 
+  // Check if userEmail is provided
+  if (!userEmail) {
+    return res.status(400).send({ message: "User email is required" });
+  }
+
+  // Check if the user exists
+  const user = await prisma.user.findUnique({
+    where: { email: userEmail },
+  });
+
   if (!user) {
-    return res.status(400).send({ message: "User with the provided email does not exist" });
-  };
+    return res
+      .status(400)
+      .send({ message: "User with the provided email does not exist" });
+  }
 
   try {
     const residency = await prisma.residency.create({
@@ -25,20 +36,21 @@ export const createResidency = asyncHandler(async (req, res) => {
         title,
         description,
         price,
-        country,
         address,
+        country,
         city,
         facilities,
         image,
+        userEmail,
         owner: { connect: { email: userEmail } },
       },
     });
     res.send({ message: "Residency created successfully!", residency });
   } catch (error) {
-    if (error.code === "P2002") {
-      throw new Error("A residency with that address already registered");
-    }
-    throw new Error(error.message);
+    console.error("Error creating residency:", error);
+    res
+      .status(500)
+      .send({ message: "Failed to create residency", error: error.message });
   }
 });
 
