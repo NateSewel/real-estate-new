@@ -2,8 +2,6 @@ import asyncHandler from "express-async-handler";
 import { prisma } from "../config/prismaConfig.js";
 
 export const createResidency = asyncHandler(async (req, res) => {
-
-  console.log("Request Body:", req.body);
   
   const {
     title,
@@ -17,8 +15,13 @@ export const createResidency = asyncHandler(async (req, res) => {
     userEmail,
   } = req.body.data;
 
-   if (!userEmail) {
-    return res.status(400).send({ message: "User email is required" });
+    // Check if the user exists
+  const user = await prisma.user.findUnique({
+    where: { email: userEmail },
+  });
+
+  if (!user) {
+    return res.status(400).send({ message: "User with the provided email does not exist" });
   }
 
   try {
