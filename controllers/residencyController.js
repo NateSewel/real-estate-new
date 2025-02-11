@@ -2,6 +2,9 @@ import asyncHandler from "express-async-handler";
 import { prisma } from "../config/prismaConfig.js";
 
 export const createResidency = asyncHandler(async (req, res) => {
+
+  console.log("Request Body:", req.body);
+  
   const {
     title,
     description,
@@ -13,6 +16,10 @@ export const createResidency = asyncHandler(async (req, res) => {
     image,
     userEmail,
   } = req.body.data;
+
+   if (!userEmail) {
+    return res.status(400).send({ message: "User email is required" });
+  }
 
   try {
     const residency = await prisma.residency.create({
