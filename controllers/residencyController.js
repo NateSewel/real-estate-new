@@ -15,14 +15,9 @@ export const createResidency = asyncHandler(async (req, res) => {
     userEmail,
   } = req.body.data;
 
-    // Check if the user exists
-  const user = await prisma.user.findUnique({
-    where: { email: userEmail },
-  });
-
   if (!user) {
     return res.status(400).send({ message: "User with the provided email does not exist" });
-  }
+  };
 
   try {
     const residency = await prisma.residency.create({
