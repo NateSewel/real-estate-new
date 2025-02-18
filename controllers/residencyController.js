@@ -11,7 +11,6 @@ export const createResidency = asyncHandler(async (req, res) => {
     city,
     facilities,
     image,
-    userEmail,
   } = req.body.data;
 
   try {
