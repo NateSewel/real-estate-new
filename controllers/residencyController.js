@@ -11,6 +11,7 @@ export const createResidency = asyncHandler(async (req, res) => {
     city,
     facilities,
     image,
+    userEmail,
   } = req.body.data;
 
   try {
@@ -24,7 +25,7 @@ export const createResidency = asyncHandler(async (req, res) => {
         city,
         facilities,
         image,
-        owner: { connect: { email: userEmail}},
+        owner: { connect: { userEmail: email}},
       },
     });
     res.send({ message: "Residency created successfully!", residency });
